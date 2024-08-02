@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  user_id        String     @id @default(cuid())
+  email          String
+  user_name      String
+  address        String
+  phone          String
+  avatar_url     String
+  created_at     DateTime   @default(now())
+  address_detail String     @default("상세주소")
+  address_code   String     @default("우편번호")
+  cart           Cart[]
+  Chatrooms      Chatroom[]
+  messages       Message?
+  order          Order?
+  reviews        Review[]
+}
+
+model Seller {
+  seller_id   String       @id @default(cuid())
+  email       String
+  user_name   String
+  address     String
+  phone       String
+  created_at  DateTime     @default(now())
+  Chatrooms   Chatroom[]
+  livestreams Livestream[]
+  messages    Message?
+  products    Product[]
+}
+
+model Product {
+  product_id       String       @id @default(cuid())
+  productseller_id String
+  category         String
+  title            String
+  price            Int
+  thumbnail_url    String
+  image_url        String
+  description      String
+  stock            Int
+  created_at       DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?    @default(now()) @updatedAt @db.Timestamptz(6)
+  cart             Cart[]
+  chatrooms        Chatroom?
+  livestream       Livestream[]
+  seller_id        Seller       @relation(fields: [productseller_id], references: [seller_id], onDelete: Cascade)
+  reviews          Review[]
+}
+
+model Order {
+  order_id      String   @id @default(cuid())
+  cost          Int
+  is_payed      Boolean
+  order_date    DateTime
+  order_user_id String   @unique
+  user          User     @relation(fields: [order_user_id], references: [user_id], onDelete: Cascade)
+}
+
+model Cart {
+  cart_id         String  @id @default(cuid())
+  cart_user_id    String
+  cart_product_id String
+  count           Int
+  product         Product @relation(fields: [cart_product_id], references: [product_id], onDelete: Cascade)
+  user            User    @relation(fields: [cart_user_id], references: [user_id], onDelete: Cascade)
+}
+
+model Review {
+  review_id         String  @id @default(cuid())
+  title             String
+  description       String
+  review_user_id    String
+  review_product_id String
+  product           Product @relation(fields: [review_product_id], references: [product_id], onDelete: Cascade)
+  user              User    @relation(fields: [review_user_id], references: [user_id], onDelete: Cascade)
+}
+
+model Chatroom {
+  chatroom_id         String    @id @default(cuid())
+  created_at          DateTime  @default(now())
+  chatroom_user_id    String
+  chatroom_seller_id  String
+  chatroom_product_id String    @unique
+  product             Product   @relation(fields: [chatroom_product_id], references: [product_id], onDelete: Cascade)
+  seller              Seller    @relation(fields: [chatroom_seller_id], references: [seller_id])
+  user                User      @relation(fields: [chatroom_user_id], references: [user_id])
+  message             Message[]
+}
+
+model Message {
+  message_id          String   @id @default(cuid())
+  created_at          DateTime @default(now())
+  payload             String
+  is_read             Boolean
+  message_chatroom_id String
+  message_user_id     String   @unique
+  message_seller_id   String   @unique
+  room                Chatroom @relation(fields: [message_chatroom_id], references: [chatroom_id], onDelete: Cascade)
+  seller              Seller   @relation(fields: [message_seller_id], references: [seller_id])
+  user                User     @relation(fields: [message_user_id], references: [user_id])
+}
+
+model Livestream {
+  livestream_id         String   @id @default(cuid())
+  title                 String
+  category              String
+  description           String
+  stream_key            String
+  stream_id             String
+  video_uid             String
+  create_at             DateTime @default(now())
+  livestream_seller_id  String
+  livestream_product_id String
+  product               Product  @relation(fields: [livestream_product_id], references: [product_id], onDelete: Cascade)
+  seller                Seller   @relation(fields: [livestream_seller_id], references: [seller_id], onDelete: Cascade)
+}

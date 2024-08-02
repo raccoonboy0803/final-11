@@ -44,41 +44,41 @@ function AuthCallback() {
       }
     };
 
-    const checkUserExists = async (userId: string) => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('User')
-        .select('user_id')
-        .eq('user_id', userId)
-        .single();
+    // const checkUserExists = async (userId: string) => {
+    //   const supabase = createClient();
+    //   const { data, error } = await supabase
+    //     .from('User')
+    //     .select('user_id')
+    //     .eq('user_id', userId)
+    //     .single();
 
-      if (error && error.code !== 'PGRST116') {
-        // PGRST116 is the code for no rows found in supabase-js
-        console.error('사용자 확인 중 에러 발생:', error.message);
-        return false;
-      }
+    //   if (error && error.code !== 'PGRST116') {
+    //     // PGRST116 is the code for no rows found in supabase-js
+    //     console.error('사용자 확인 중 에러 발생:', error.message);
+    //     return false;
+    //   }
 
-      return data !== null;
-    };
+    //   return data !== null;
+    // };
 
-    const getUserSession = async () => {
-      const supabase = createClient();
-      const { data } = await supabase.auth.getSession();
-      return data;
-    };
+    // const getUserSession = async () => {
+    //   const supabase = createClient();
+    //   const { data } = await supabase.auth.getSession();
+    //   return data;
+    // };
 
-    const handleAuthCallback = async () => {
-      const { session } = await getUserSession();
-      if (session) {
-        const userExists = await checkUserExists(session.user.id);
-        if (!userExists) {
-          await saveUserToDatabase(session.user);
-        }
-        router.push('/');
-      }
-    };
+    // const handleAuthCallback = async () => {
+    //   const { session } = await getUserSession();
+    //   if (session) {
+    //     const userExists = await checkUserExists(session.user.id);
+    //     if (!userExists) {
+    //       await saveUserToDatabase(session.user);
+    //     }
+    //     router.push('/');
+    //   }
+    // };
 
-    handleAuthCallback();
+    // handleAuthCallback();
   }, [router]);
 
   return <div>로그인 중...</div>;

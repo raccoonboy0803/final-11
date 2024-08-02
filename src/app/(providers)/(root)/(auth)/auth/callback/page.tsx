@@ -119,9 +119,7 @@ function AuthCallback() {
 
         if (error) {
           console.error('유저 정보를 데이터베이스에 저장하는 중 에러 발생:', error.message);
-          console.error('유저 정보를 데이터베이스에 저장하는 중 에러 발생:', error);
-          console.error('에러 세부 사항:', error.details);
-          console.error('힌트:', error.hint);
+
           return false;
         } else {
           console.log('유저 정보를 데이터베이스에 성공적으로 저장');

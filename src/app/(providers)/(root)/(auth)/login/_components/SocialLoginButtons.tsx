@@ -10,7 +10,8 @@ const handleSocialLogin = async (provider: OAuthProvider) => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`
+      // redirectTo: `${window.location.origin}/auth/callback`
+      redirectTo: `${process.env.NEXT_PUBLIC_REDIRECT_URL!}/auth/callback`
     }
   });
 

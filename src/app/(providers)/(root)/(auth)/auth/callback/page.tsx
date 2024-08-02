@@ -61,24 +61,25 @@ function AuthCallback() {
     //   return data !== null;
     // };
 
-    // const getUserSession = async () => {
-    //   const supabase = createClient();
-    //   const { data } = await supabase.auth.getSession();
-    //   return data;
-    // };
+    const getUserSession = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getSession();
+      return data;
+    };
 
-    // const handleAuthCallback = async () => {
-    //   const { session } = await getUserSession();
-    //   if (session) {
-    //     const userExists = await checkUserExists(session.user.id);
-    //     if (!userExists) {
-    //       await saveUserToDatabase(session.user);
-    //     }
-    //     router.push('/');
-    //   }
-    // };
+    const handleAuthCallback = async () => {
+      const { session } = await getUserSession();
+      if (session) {
+        // const userExists = await checkUserExists(session.user.id);
+        // if (!userExists) {
+        //   await saveUserToDatabase(session.user);
+        // }
+        await saveUserToDatabase(session.user);
+        router.push('/');
+      }
+    };
 
-    // handleAuthCallback();
+    handleAuthCallback();
   }, [router]);
 
   return <div>로그인 중...</div>;

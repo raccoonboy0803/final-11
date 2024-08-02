@@ -17,7 +17,9 @@ function AuthCallback() {
         email: user.email,
         phone: '000-0000-0000',
         address: '',
-        created_at: user.created_at
+        created_at: user.created_at,
+        address_detail: '상세주소',
+        address_code: '우편번호'
       };
       const sellerData = {
         // 판매자
